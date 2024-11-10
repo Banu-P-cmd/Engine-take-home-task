@@ -16,7 +16,6 @@ This repository contains the architectural design for a modern Clinical Data Age
 
 ## System Architecture
 
-![Overall Architecture](./src/assets/architecture.png)
 
 The system is organized into six distinct layers:
 
@@ -63,7 +62,7 @@ The system is organized into six distinct layers:
 
 ## Rules-Based Query Flow
 
-![Rules Flow](./src/assets/rules-sequence.png)
+
 
 The rules-based flow demonstrates the processing of immediate clinical risk assessments:
 
@@ -89,7 +88,7 @@ The rules-based flow demonstrates the processing of immediate clinical risk asse
 
 ## Predictive Analysis Flow
 
-![Predictive Flow](./src/assets/predictive-sequence.png)
+
 
 The predictive analysis flow shows the process for future risk prediction:
 
