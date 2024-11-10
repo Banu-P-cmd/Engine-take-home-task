@@ -3,39 +3,68 @@
 ```mermaid
 
 sequenceDiagram
-    participant C as Clinician
-    participant L as LangGraph
-    participant Q as Query Agent
+    participant U as User
+    participant O as Orchestrator
+    participant S as Schema Manager
+    participant E as Entity Agent
     participant D as Data Agent
-    participant R as RAG Agent
+    participant R as Rules Agent
+    participant K as Knowledge Graph
     participant M as Monitor
 
-    C->>L: Query: "Find high-risk diabetes patients"
+    U->>O: Clinical Query Request
     
-    L->>Q: Process query
-    activate Q
-    Note over Q: Using Claude 3:<br/>1. Intent classification<br/>2. Entity extraction<br/>3. Query planning
-    Q-->>L: Structured query plan
-    deactivate Q
-    
-    par Parallel Processing
-        L->>D: Retrieve patient data
-        Note over D: Sources:<br/>1. PGVector<br/>2. Redis Enterprise
+    par Schema & Entity Processing
+        O->>S: Validate Schema Context
+        S->>K: Get Schema Mappings
+        K-->>S: Schema Validation Rules
         
-        L->>R: Prepare RAG context
-        Note over R: Using:<br/>1. ChromaDB<br/>2. LlamaIndex
+        O->>E: Entity Resolution Request
+        E->>K: Get Entity Mappings
+        K-->>E: Entity Relationships
+    end
+
+    S-->>O: Schema Context
+    E-->>O: Resolved Entities
+
+    O->>D: Data Retrieval Request
+    
+    par Data Processing
+        D->>K: Get Domain Rules
+        K-->>D: Business Logic
+        
+        D->>S: Get Quality Rules
+        S-->>D: Validation Criteria
+    end
+
+    D-->>O: Validated Data
+
+    O->>R: Apply Rules Engine
+    
+    par Rule Processing
+        R->>K: Get Business Rules
+        K-->>R: Rule Definitions
+        
+        R->>S: Get Constraints
+        S-->>R: Data Constraints
+    end
+
+    R-->>O: Rule Results
+
+    O->>M: Log Processing
+    
+    par Monitoring
+        M->>K: Get Metrics Rules
+        K-->>M: Performance KPIs
+    end
+
+    M-->>O: Processing Metrics
+    
+    O-->>U: Enhanced Results Report
+
+    loop Continuous Learning
+        M->>K: Update Knowledge Base
+        M->>S: Update Schema Rules
+        M->>E: Update Entity Mappings
     end
     
-    D-->>L: Vector-enriched data
-    R-->>L: Retrieved context
-    
-    L->>R: Execute RAG pipeline
-    activate R
-    Note over R: Processing:<br/>1. Semantic search<br/>2. Context injection<br/>3. Rule application
-    R-->>L: Risk assessment
-    deactivate R
-    
-    L->>M: Log with LangSmith
-    Note over M: Track:<br/>1. RAG performance<br/>2. Query patterns
-    
-    L-->>C: Enhanced Risk Report
