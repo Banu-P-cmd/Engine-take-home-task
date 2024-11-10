@@ -1,143 +1,86 @@
-# Engine take home task
- 4 files - overall architecture, rules based query, risk predicitve model, read me
-
- # Clinical Data Agent Architecture
+# Clinical Data Agent Architecture
 
 ## Overview
-This repository contains the architectural design for a modern Clinical Data Agent system leveraging LangGraph orchestration, focusing on both rules-based and predictive modeling approaches for clinical data analysis.
+Data agent system leveraging LangGraph orchestration for both rules-based and predictive risk assessment. The system integrates LLM capabilities with clinical data processing to provide real-time insights and predictions.
 
-## Table of Contents
-- [System Architecture](#system-architecture)
-- [Rules-Based Query Flow](#rules-based-query-flow)
-- [Predictive Analysis Flow](#predictive-analysis-flow)
-- [Technology Stack](#technology-stack)
-- [Implementation Guide](#implementation-guide)
-- [Contributing](#contributing)
+## Architecture Documentation
 
-## System Architecture
+The architecture consists of three main diagrams showing different aspects of the system:
 
+### 1. Overall System Architecture
 
-The system is organized into six distinct layers:
+The overall architecture demonstrates how different components interact across layers:
+- External Integration Layer
+- LangGraph Orchestration
+- Core Processing Layer
+- Infrastructure Layer
+- Storage Layer
+- Monitoring Layer
 
-### External Integration Layer
-- **Web UI**: Next.js 14 for modern frontend interface
-- **API Gateway**: FastAPI/LangServe for backend services
-- **Clinical Sources**: Integration with various healthcare data sources
+### 2. Rules-Based Query Flow
 
-### LangGraph Orchestration Layer
-- **Controller**: Central orchestration of agent network
-- **Agent Network**:
-  - Query Agent (Claude 3)
-  - Data Agent
-  - Rules Agent
-  - ML Agent
-  - Monitor Agent
+Sequence diagram showing:
+- Query processing flow
+- Data retrieval and validation
+- Rules application
+- Results generation
 
-### Core Processing Layer
-- **Rules Engine**:
-  - RAG Pipeline
-  - Vector Store (Qdrant)
-  - ChromaDB
-- **ML Pipeline**:
-  - Vector Database
-  - LlamaIndex
-  - Model Registry
+### 3. Predictive Analysis Flow
 
-### Infrastructure Layer
-- Kafka/Redpanda for event streaming
-- Redis Enterprise for caching
-- Vectorize for vector operations
-- PGVector for vector storage
+Sequence diagram detailing:
+- Predictive query handling
+- Historical data processing
+- ML model application
+- Continuous learning loop
 
-### Persistence Layer
-- MongoDB Atlas
-- Milvus
-- MinIO
-- LangKit Store
+## Key Assumptions
 
-### Observability Layer
-- LangSmith
-- Weights & Biases
-- Prometheus/Grafana
+### Clinical Domain
+- Standard healthcare data formats (HL7, FHIR)
+- HIPAA compliance requirements
+- Clinical workflow integration needs
+- Human-in-the-loop validation
 
-## Rules-Based Query Flow
+### Technical Requirements
+- High availability (99.9%)
+- Sub-second query response
+- Scalable to millions of records
+- Secure data handling
 
-
-
-The rules-based flow demonstrates the processing of immediate clinical risk assessments:
-
-1. **Query Processing**
-   - Natural language query interpretation
-   - Clinical context extraction
-   - Rule set identification
-
-2. **Data Collection**
-   - Patient record retrieval
-   - Clinical data aggregation
-   - Context enrichment
-
-3. **Rule Application**
-   - Clinical rule evaluation
-   - Risk score calculation
-   - Action recommendation
-
-4. **Response Generation**
-   - Risk assessment report
-   - Clinical recommendations
-   - Action items
-
-## Predictive Analysis Flow
-
-
-
-The predictive analysis flow shows the process for future risk prediction:
-
-1. **Query Understanding**
-   - Temporal requirement analysis
-   - Prediction target identification
-   - Feature requirement mapping
-
-2. **Data Processing**
-   - Historical data collection
-   - Time series analysis
-   - Feature engineering
-
-3. **Prediction Generation**
-   - Model selection
-   - Feature vector processing
-   - Risk score calculation
-   - Confidence interval generation
-
-4. **Continuous Learning**
-   - Feedback collection
-   - Model updating
-   - Feature optimization
+### LLM Integration
+- Open AI API access
+- Vector storage capabilities
+- RAG pipeline requirements
+- Model performance expectations
 
 ## Technology Stack
 
-### Core Technologies
-- **LangGraph**: Orchestration framework
-- **LangSmith**: LLM observability
-- **Claude 3**: Advanced language model
-- **Vector Stores**: Qdrant, ChromaDB
-- **Databases**: MongoDB Atlas, Redis Enterprise
+### Core Components
+- LangGraph: Orchestration
+- Gpt 3: Primary LLM
+- FastAPI/LangServe: API Layer
+- Next.js 14: Frontend
+- MongoDB Atlas: Primary Storage
+- Redis Enterprise: Caching
+- Milvus/Qdrant: Vector Storage
 
-### Development Tools
-- **Frontend**: Next.js 14
-- **Backend**: FastAPI, LangServe
-- **ML Pipeline**: LlamaIndex
-- **Monitoring**: Prometheus, Grafana
+### Monitoring & Observability
+- LangSmith: LLM Monitoring
+- Prometheus/Grafana: System Metrics
+- Weights & Biases: ML Monitoring
 
-## Implementation Guide
+## Setup & Installation
 
-### Prerequisites
 ```bash
-# Core dependencies
-python -m pip install langchain langgraph langsmith
-npm install -g @mermaid-js/mermaid-cli
+# Clone repository
+git clone https://github.com/your-org/clinical-data-agent
 
-# Vector stores
-pip install qdrant-client chromadb
+# Install dependencies
+pip install -r requirements.txt
+npm install
 
-# Monitoring
-pip install prometheus-client grafana-api
+# Configure environment
+cp .env.example .env
+
+# Run development environment
+docker-compose up -d
