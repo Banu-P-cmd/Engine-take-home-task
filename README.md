@@ -57,7 +57,7 @@ Extracts:
 - Metric: HbA1c
 - Context: Diabetes clinic
 Entity Agent [BioClinicalBERT]
-└── Resolves:
+Resolves:
 - HbA1c → LOINC: 4548-4
 - Diabetes clinic → Department ID
 - Normal ranges → Clinical standards
