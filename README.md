@@ -114,6 +114,135 @@ Executes:
 - Risk model application
 - Confidence scoring
 
+## Design Assumptions & Decisions
+
+### Architecture Assumptions
+1. **Agent Design**
+  - Agents need to operate independently yet coordinate effectively
+  - Single orchestrator can manage the entire workflow
+  - Agent communication won't be a bottleneck
+  - Failed agent tasks can be retried or compensated
+
+2. **Model Selection**
+  - Clinical-specific models perform better than general models for medical tasks
+  - Llama 2 70B is sufficient for general reasoning tasks
+  - Models can be efficiently loaded and run in production
+  - Model updates won't disrupt ongoing operations
+
+3. **Integration Decisions**
+  - Systems can interact via standardized APIs
+  - Real-time integration is possible with clinical systems
+  - Batch processing is acceptable for non-urgent tasks
+  - System can handle network latency and failures
+
+### Data Assumptions
+1. **Database Structure**
+  - Clinical data follows standard schemas (HL7/FHIR)
+  - Relationships between tables are well-defined
+  - Primary keys and foreign keys are properly maintained
+  - Data types are consistent across systems
+
+2. **Data Quality**
+  - Missing data is clearly marked
+  - Outliers are identifiable
+  - Time series data is continuous
+  - Historical data is available for training
+
+3. **Clinical Records**
+  - Patient records are complete and accessible
+  - Medical codes are standardized (ICD-10, SNOMED CT)
+  - Lab results include reference ranges
+  - Timestamps are accurate and consistent
+
+### Clinical Workflow Assumptions
+1. **Medical Practice**
+  - Clinical guidelines are regularly updated
+  - Decision support is advisory, not definitive
+  - Human oversight is always available
+  - Emergency protocols can override standard flows
+
+2. **User Interaction**
+  - Clinicians understand basic query construction
+  - Results need clinical interpretation
+  - Response time expectations align with clinical workflows
+  - System recommendations need validation
+
+3. **Domain Knowledge**
+  - Medical terminology is standardized
+  - Clinical relationships are well-defined
+  - Treatment protocols are documented
+  - Risk factors are quantifiable
+
+### Technical Assumptions
+1. **Performance**
+  - Query processing: <500ms for simple queries
+  - Batch processing: <4 hours for complex analysis
+  - Model inference: <200ms per request
+  - System uptime: 99.9%
+
+2. **Scalability**
+  - Horizontal scaling is possible
+  - Resource allocation is dynamic
+  - Load balancing is available
+  - Data partitioning is feasible
+
+3. **Infrastructure**
+  - GPU resources are available when needed
+  - Network bandwidth is sufficient
+  - Storage is expandable
+  - Backup systems are in place
+
+### Model Assumptions
+1. **Training Data**
+  - Sufficient clinical data is available
+  - Data is representative of population
+  - Labels are accurate
+  - Updates are regular
+
+2. **Performance Metrics**
+  - Entity recognition accuracy >95%
+  - Clinical prediction accuracy >90%
+  - False positive rate <1% for critical alerts
+  - Model drift is detectable
+
+3. **Resource Requirements**
+  - GPU memory: 40GB+ for large models
+  - CPU: 32+ cores for processing
+  - RAM: 128GB+ for operations
+  - Storage: 1TB+ for model artifacts
+
+### Compliance Assumptions
+1. **Regulatory**
+  - HIPAA compliance is mandatory
+  - Audit trails are required
+  - Data encryption is necessary
+  - Access controls are strict
+
+2. **Validation**
+  - Clinical validation is available
+  - Test environments mirror production
+  - Validation data is representative
+  - Performance metrics are acceptable
+
+### Limitations Acknowledged
+1. **System Constraints**
+  - Cannot replace clinical judgment
+  - Requires ongoing maintenance
+  - Needs regular updates
+  - Resource intensive
+
+2. **Data Constraints**
+  - Quality depends on input data
+  - Historical data may be incomplete
+  - Real-time updates may be delayed
+  - Integration may be complex
+
+3. **Model Constraints**
+  - Models may require retraining
+  - Performance may vary across populations
+  - Edge cases may not be handled well
+  - New conditions may not be recognized
+
 ## Technical Stack
 
 ### Models & Tools
