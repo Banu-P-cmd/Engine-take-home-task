@@ -284,9 +284,9 @@ Executes:
   - Updates are regular
 
 2. **Performance Metrics**
-  - Entity recognition accuracy >95%
-  - Clinical prediction accuracy >90%
-  - False positive rate <1% for critical alerts
+  - Entity recognition accuracy >85%
+  - Clinical prediction accuracy >70%
+  - False positive rate <5% for critical alerts
   - Model drift is detectable
 
 3. **Resource Requirements**
@@ -348,40 +348,5 @@ Executes:
   - ChromaDB for vector storage
   - TimescaleDB for temporal data
   - Redis for caching
-
-
-## Implementation Notes
-
-1. **Query Processing**
-   - Medical entity extraction
-   - Clinical context validation
-   - Protocol adherence
-   - Risk assessment
-
-2. **Data Handling**
-   - PHI protection
-   - Audit logging
-   - Version control
-   - Quality checks
-
-3. **Model Updates**
-   - Weekly model retraining
-   - Continuous validation
-   - Performance monitoring
-   - Clinical accuracy checks
-
-## Limitations
-1. Structured data requirement
-2. Clinical validation needed
-3. Regular updates required
-4. Domain expertise necessary
-
-## Performance Metrics
-- Entity resolution accuracy: >75%
-- Query response time: <500ms
-- Clinical validation rate: >70%
-- Prediction accuracy: >65%
-
----
 
 Note: System requires clinical validation before production use. All models require regular updates based on new medical guidelines and research.
