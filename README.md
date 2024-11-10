@@ -1,86 +1,147 @@
 # Clinical Data Agent Architecture
 
 ## Overview
-Data agent system leveraging LangGraph orchestration for both rules-based and predictive risk assessment. The system integrates LLM capabilities with clinical data processing to provide real-time insights and predictions.
+An enterprise-grade clinical data agent system leveraging specialized medical LLMs and domain-specific models for both rules-based and predictive clinical risk assessment.
 
-## Architecture Documentation
+## Core LLM & Domain Models
 
-The architecture consists of three main diagrams showing different aspects of the system:
+### Primary Models
+- **ClinicalBERT**: Clinical text understanding and entity extraction
+- **BioBERT**: Biomedical entity recognition
+- **PubMedBERT**: Medical literature context
+- **RadBERT**: Radiology report processing
+- **Med-PaLM 2**: Medical reasoning tasks
+- **BlueBERT**: Medical concept extraction
+- **Claude 3**: General orchestration and complex reasoning
+
+### Model Selection Strategy
+- ClinicalBERT for patient records analysis
+- BioBERT for biological entity mapping
+- PubMedBERT for clinical knowledge integration
+- General LLMs (Claude 3) for orchestration
+
+## Architecture Components
 
 ### 1. Overall System Architecture
+![System Architecture](./src/assets/architecture.png)
 
-The overall architecture demonstrates how different components interact across layers:
+#### Layer Description
 - External Integration Layer
+- Schema & Knowledge Layer
 - LangGraph Orchestration
-- Core Processing Layer
+- Enhanced Processing Layer
 - Infrastructure Layer
-- Storage Layer
 - Monitoring Layer
 
 ### 2. Rules-Based Query Flow
+![Rules Flow](./src/assets/rules-sequence.png)
 
-Sequence diagram showing:
-- Query processing flow
-- Data retrieval and validation
-- Rules application
-- Results generation
+#### Key Components
+- Schema validation
+- Entity resolution
+- Clinical rule application
+- Domain knowledge integration
 
 ### 3. Predictive Analysis Flow
+![Predictive Flow](./src/assets/predictive-sequence.png)
 
-Sequence diagram detailing:
-- Predictive query handling
+#### Key Components
 - Historical data processing
+- Clinical feature engineering
 - ML model application
-- Continuous learning loop
+- Continuous learning
 
-## Key Assumptions
+## Critical Assumptions
 
-### Clinical Domain
-- Standard healthcare data formats (HL7, FHIR)
-- HIPAA compliance requirements
-- Clinical workflow integration needs
-- Human-in-the-loop validation
+### Clinical Domain Assumptions
+1. **Data Standards**
+   - HL7 v2/v3 compatibility
+   - FHIR resource mapping
+   - SNOMED-CT coding
+   - ICD-10/ICD-11 classifications
+   - LOINC lab codes
 
-### Technical Requirements
-- High availability (99.9%)
-- Sub-second query response
-- Scalable to millions of records
-- Secure data handling
+2. **Clinical Workflow**
+   - EMR/EHR integration capability
+   - Clinical decision support requirements
+   - Real-time alerting needs
+   - Workflow interruption tolerance
 
-### LLM Integration
-- Open AI API access
-- Vector storage capabilities
-- RAG pipeline requirements
-- Model performance expectations
+3. **Medical Knowledge**
+   - Updated medical ontologies
+   - Current clinical guidelines
+   - Evidence-based rules
+   - Drug interaction data
+
+### Technical Assumptions
+
+1. **Performance Requirements**
+   - Query response: <500ms for rules
+   - Batch processing: <4 hours
+   - Uptime: 99.99%
+   - Concurrent users: 1000+
+
+2. **Data Characteristics**
+   - Patient records: 10M+
+   - Daily transactions: 1M+
+   - Storage: 100TB+
+   - Text data: 60% of volume
+   - Structured data: 40% of volume
+
+3. **Integration Requirements**
+   - HL7 interface capability
+   - FHIR API support
+   - DICOM compatibility
+   - Secure messaging protocols
+
+### LLM & ML Assumptions
+
+1. **Model Performance**
+   - ClinicalBERT: F1 >0.85 for medical entities
+   - BioBERT: Precision >0.90 for bio entities
+   - PubMedBERT: Recall >0.85 for literature
+   - Overall accuracy: >95% for critical decisions
+
+2. **Resource Requirements**
+   - GPU: A100 or equivalent
+   - Memory: 32GB+ per instance
+   - Storage: NVMe SSD
+   - Network: 10Gbps+
 
 ## Technology Stack
 
-### Core Components
+### Core Infrastructure
 - LangGraph: Orchestration
-- Gpt 3: Primary LLM
-- FastAPI/LangServe: API Layer
-- Next.js 14: Frontend
-- MongoDB Atlas: Primary Storage
+- Pinecone: Medical vector store
+- MongoDB Atlas: Document store
 - Redis Enterprise: Caching
-- Milvus/Qdrant: Vector Storage
+- Apache Kafka: Event streaming
 
-### Monitoring & Observability
-- LangSmith: LLM Monitoring
-- Prometheus/Grafana: System Metrics
-- Weights & Biases: ML Monitoring
+### ML Infrastructure
+- Weights & Biases: ML monitoring
+- MLflow: Model registry
+- Ray: Distributed computing
+- NVIDIA Triton: Model serving
 
-## Setup & Installation
+### Development & Deployment
+- FastAPI: Backend services
+- Next.js 14: Frontend
+- Docker & Kubernetes: Containerization
+- ArgoCD: GitOps deployment
 
-```bash
-# Clone repository
-git clone https://github.com/your-org/clinical-data-agent
+## Security & Compliance
 
-# Install dependencies
-pip install -r requirements.txt
-npm install
+### Security Requirements
+- HIPAA compliance
+- HITECH compliance
+- GDPR readiness
+- SOC2 Type II
+- Zero-trust architecture
 
-# Configure environment
-cp .env.example .env
+### Data Protection
+- End-to-end encryption
+- PHI data masking
+- Role-based access
+- Audit logging
 
-# Run development environment
-docker-compose up -d
+## Repository Structure
