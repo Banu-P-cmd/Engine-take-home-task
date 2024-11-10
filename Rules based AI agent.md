@@ -3,68 +3,53 @@
 ```mermaid
 
 sequenceDiagram
-    participant U as User
-    participant O as Orchestrator
-    participant S as Schema Manager
+    participant C as Clinician
+    participant O as Orchestrator Agent
+    participant Q as Query Agent
+    participant S as Schema Agent
     participant E as Entity Agent
-    participant D as Data Agent
-    participant R as Rules Agent
-    participant K as Knowledge Graph
-    participant M as Monitor
+    participant D as Domain Agent
+    participant R as Data Retrieval Agent
+    participant A as Analytics Agent
 
-    U->>O: Clinical Query Request
+    C->>O: "Show me top 5 patients with highest HbA1c levels in diabetes clinic"
     
-    par Schema & Entity Processing
-        O->>S: Validate Schema Context
-        S->>K: Get Schema Mappings
-        K-->>S: Schema Validation Rules
-        
-        O->>E: Entity Resolution Request
-        E->>K: Get Entity Mappings
-        K-->>E: Entity Relationships
+    O->>Q: Process clinical query
+    activate Q
+    Note over Q: Identifies:<br/>1. Query type: Ranking<br/>2. Measure: HbA1c<br/>3. Limit: 5<br/>4. Context: Diabetes clinic
+    Q-->>O: Structured query requirements
+    deactivate Q
+
+    par Schema & Entity Resolution
+        O->>S: Resolve schema context
+        activate S
+        Note over S: Maps required tables:<br/>1. patient_records<br/>2. lab_results<br/>3. clinic_assignments
+        S-->>O: Table relationships
+        deactivate S
+
+        O->>E: Resolve clinical entities
+        activate E
+        Note over E: Resolves:<br/>1. HbA1c to LOINC: 4548-4<br/>2. Diabetes clinic ID
+        E-->>O: Resolved entities
+        deactivate E
+
+        O->>D: Get clinical context
+        activate D
+        Note over D: Validates:<br/>1. HbA1c normal ranges<br/>2. Clinical relevance<br/>3. Time validity
+        D-->>O: Clinical rules
+        deactivate D
     end
 
-    S-->>O: Schema Context
-    E-->>O: Resolved Entities
+    O->>R: Execute data retrieval
+    activate R
+    Note over R: SQL Generation:<br/>SELECT p.id, p.name, l.value<br/>FROM patients p<br/>JOIN lab_results l<br/>WHERE l.loinc = '4548-4'<br/>ORDER BY l.value DESC<br/>LIMIT 5
+    R-->>O: Raw results
+    deactivate R
 
-    O->>D: Data Retrieval Request
-    
-    par Data Processing
-        D->>K: Get Domain Rules
-        K-->>D: Business Logic
-        
-        D->>S: Get Quality Rules
-        S-->>D: Validation Criteria
-    end
+    O->>A: Process analytics
+    activate A
+    Note over A: Analysis:<br/>1. Validate ranges<br/>2. Format values<br/>3. Add clinical context<br/>4. Generate alerts
+    A-->>O: Analyzed results
+    deactivate A
 
-    D-->>O: Validated Data
-
-    O->>R: Apply Rules Engine
-    
-    par Rule Processing
-        R->>K: Get Business Rules
-        K-->>R: Rule Definitions
-        
-        R->>S: Get Constraints
-        S-->>R: Data Constraints
-    end
-
-    R-->>O: Rule Results
-
-    O->>M: Log Processing
-    
-    par Monitoring
-        M->>K: Get Metrics Rules
-        K-->>M: Performance KPIs
-    end
-
-    M-->>O: Processing Metrics
-    
-    O-->>U: Enhanced Results Report
-
-    loop Continuous Learning
-        M->>K: Update Knowledge Base
-        M->>S: Update Schema Rules
-        M->>E: Update Entity Mappings
-    end
-    
+    O-->>C: Clinical report with top 5 HbA1c values
