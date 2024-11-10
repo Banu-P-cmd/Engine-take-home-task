@@ -47,9 +47,11 @@ A specialized agent-based system for clinical data analysis and risk prediction,
 
 1. **Rules-Based Query Example**
 Query: "Show me top 5 patients with highest HbA1c levels in diabetes clinic"
+
 Agent Interaction Flow:
 Query Agent [Llama 2 70B]
-└── Extracts:
+
+Extracts:
 - Action: Rank and limit
 - Target: Patients
 - Metric: HbA1c
@@ -60,7 +62,8 @@ Entity Agent [BioClinicalBERT]
 - Diabetes clinic → Department ID
 - Normal ranges → Clinical standards
 Data Agent
-└── Generates:
+
+Generates:
 SELECT
 p.patient_id,
 p.demographics,
@@ -72,8 +75,9 @@ WHERE l.loinc_code = '4548-4'
 AND p.clinic_id = 'DIAB_01'
 ORDER BY l.value DESC
 LIMIT 5
+
 Analysis Agent [med-analytics-bert]
-└── Processes:
+Processes:
 - Validates ranges
 - Adds clinical context
 - Flags critical values
@@ -82,26 +86,30 @@ Analysis Agent [med-analytics-bert]
 
 Query: "Predict diabetes risk using 6-month patient data"
 Agent Interaction Flow:
+
 Query Agent [Llama 2 70B]
-└── Determines:
+Determines:
 - Task: Risk prediction
 - Timeframe: 6 months
 - Condition: Diabetes
 - Data scope: Patient history
+  
 Entity Agent [BioClinicalBERT]
-└── Identifies required markers:
+Identifies required markers:
 - HbA1c (LOINC: 4548-4)
 - Fasting Glucose (LOINC: 1558-6)
 - BMI calculations
 - Blood pressure readings
 - Family history markers
+  
 Domain Agent [PubMedBERT]
-└── Applies:
+Applies:
 - ADA Guidelines
 - Risk factor weights
 - Clinical thresholds
+  
 ML Agent
-└── Executes:
+Executes:
 - Feature engineering
 - Risk model application
 - Confidence scoring
