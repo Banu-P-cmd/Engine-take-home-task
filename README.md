@@ -116,6 +116,90 @@ Executes:
 
 ## Design Assumptions & Decisions
 
+## Key Assumptions
+
+1. **Data Quality**
+   - Clean, structured clinical data
+   - Standard medical coding
+   - Complete patient records
+   - Regular updates
+
+2. **Technical Requirements**
+   - Response time: <500ms
+   - Uptime: 99.9%
+   - Data volume: 10M+ records
+   - Concurrent users: 100+
+
+3. **Clinical Standards**
+   - Current medical guidelines
+   - Regular protocol updates
+   - Available clinical validation
+   - Standard workflows
+  
+## Entity & Domain Knowledge Complexities
+
+### Entity Resolution Complexity
+
+1. **Clinical Terms**
+  - Same concept, multiple terms
+    * "Blood sugar" = "Glucose" = "BG"
+    * "HbA1c" = "A1c" = "Glycated hemoglobin"
+  - Context-dependent meanings
+    * "Normal" varies by test type
+    * "High" depends on measurement context
+
+2. **Standardization Challenges**
+  - Multiple coding systems
+    * Lab tests → LOINC
+    * Diseases → ICD-10/SNOMED CT
+    * Medications → RxNorm
+  - Cross-mapping requirements
+    * Converting between standards
+    * Maintaining relationships
+    * Version management
+
+3. **Resolution Complexities**
+  - Hierarchical relationships
+    * "Diabetes" includes Type 1, Type 2, Gestational
+  - Temporal aspects
+    * Current vs historical terms
+    * Changed medical definitions
+  - Regional variations
+    * UK vs US terminology
+    * Local practice differences
+
+### Domain Knowledge Complexity
+
+1. **Clinical Rules**
+  - Contextual interpretation
+    * "High BP" varies by patient age
+    * Risk factors change by population
+  - Complex relationships
+    * Multiple factors for diagnosis
+    * Interrelated conditions
+    * Treatment contraindications
+
+2. **Medical Logic**
+  - Multi-factor decisions
+    ```
+    Example: Diabetes Risk
+    - HbA1c levels
+    - Fasting glucose
+    - Family history
+    - BMI
+    - Age
+    ```
+  - Time-dependent rules
+    * Treatment sequences
+    * Monitoring intervals
+    * Protocol changes
+
+3. **Knowledge Evolution**
+  - Guideline updates
+  - New research findings
+  - Changed protocols
+  - Updated standards
+
 ### Architecture Assumptions
 1. **Agent Design**
   - Agents need to operate independently yet coordinate effectively
@@ -265,25 +349,6 @@ Executes:
   - TimescaleDB for temporal data
   - Redis for caching
 
-## Key Assumptions
-
-1. **Data Quality**
-   - Clean, structured clinical data
-   - Standard medical coding
-   - Complete patient records
-   - Regular updates
-
-2. **Technical Requirements**
-   - Response time: <500ms
-   - Uptime: 99.9%
-   - Data volume: 10M+ records
-   - Concurrent users: 100+
-
-3. **Clinical Standards**
-   - Current medical guidelines
-   - Regular protocol updates
-   - Available clinical validation
-   - Standard workflows
 
 ## Implementation Notes
 
