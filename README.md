@@ -1,165 +1,185 @@
 # Clinical Data Agent Architecture
 
 ## Overview
-An enterprise-grade clinical data agent system leveraging specialized medical LLMs and domain-specific models for both rules-based and predictive clinical risk assessment.
+A specialized agent-based system for clinical data analysis and risk prediction, built on LangGraph for agent orchestration. The system focuses on structured data extraction, summarization, and predictive analytics within clinical contexts.
 
-## Core LLM & Domain Models
+## Agent Network Architecture
 
-### Primary Models
-- **ClinicalBERT**: Clinical text understanding and entity extraction
-- **BioBERT**: Biomedical entity recognition
-- **PubMedBERT**: Medical literature context
-- **RadBERT**: Radiology report processing
-- **Med-PaLM 2**: Medical reasoning tasks
-- **BlueBERT**: Medical concept extraction
-- **Open AI GPT**: General orchestration and complex reasoning
+### Core Agents & Models
+1. **Query Understanding Agent**
+  - Primary: Llama 2 70B for general query comprehension
+  - Supporting: ClinicalBERT (bio_clinical_bert) for medical term identification
+  - Task: Converts natural language queries to structured clinical requests
 
-### Model Selection Strategy
-- ClinicalBERT for patient records analysis
-- BioBERT for biological entity mapping
-- PubMedBERT for clinical knowledge integration
-- General LLMs (GPT) for orchestration
+2. **Schema Understanding Agent**
+  - Primary: bio-lora-llama-2-70b for schema mapping
+  - Purpose: Maps clinical database schemas, relationships, and constraints
+  - Specialization: Clinical data structures (HL7, FHIR)
 
-## Architecture Components
+3. **Entity Resolution Agent**
+  - Primary: BioClinicalBERT (biobert_v1.1_pubmed)
+  - Supporting: UMLS Knowledge Integration
+  - Capabilities:
+    - Maps clinical terms to standard codes (SNOMED CT, LOINC, ICD-10)
+    - Resolves medical abbreviations
+    - Standardizes lab test names
 
-### 1. Overall System Architecture
+4. **Domain Knowledge Agent**
+  - Primary: PubMedBERT-base
+  - Knowledge Base: 
+    - Clinical guidelines database
+    - Medical protocols
+    - Standard of care rules
 
+5. **Data Retrieval Agent**
+  - Vector Store: Clinical-specific ChromaDB instance
+  - Query Engine: PostgreSQL with clinical extensions
+  - Optimization: Clinical data-specific indices
 
-#### Layer Description
-- External Integration Layer
-- Schema & Knowledge Layer
-- LangGraph Orchestration
-- Enhanced Processing Layer
-- Infrastructure Layer
-- Monitoring Layer
+6. **Analysis Agent**
+  - Clinical Metrics: med-analytics-bert
+  - Risk Models: 
+    - Diabetes: UKPDS Risk Engine v3
+    - Cardiovascular: ASCVD Risk Algorithm
+    - Complication: Clinical AI Risk Engine v2
 
-### 2. Rules-Based Query Flow
+### Example Flows
 
+1. **Rules-Based Query Example**
+Query: "Show me top 5 patients with highest HbA1c levels in diabetes clinic"
+Agent Interaction Flow:
+Query Agent [Llama 2 70B]
+└── Extracts:
+- Action: Rank and limit
+- Target: Patients
+- Metric: HbA1c
+- Context: Diabetes clinic
+Entity Agent [BioClinicalBERT]
+└── Resolves:
+- HbA1c → LOINC: 4548-4
+- Diabetes clinic → Department ID
+- Normal ranges → Clinical standards
+Data Agent
+└── Generates:
+SELECT
+p.patient_id,
+p.demographics,
+l.value as hba1c_value,
+l.date as test_date
+FROM patients p
+JOIN lab_results l ON p.id = l.patient_id
+WHERE l.loinc_code = '4548-4'
+AND p.clinic_id = 'DIAB_01'
+ORDER BY l.value DESC
+LIMIT 5
+Analysis Agent [med-analytics-bert]
+└── Processes:
+- Validates ranges
+- Adds clinical context
+- Flags critical values
 
-#### Key Components
-- Schema validation
-- Entity resolution
-- Clinical rule application
-- Domain knowledge integration
+2. **Predictive Analysis Example**
 
-### 3. Predictive Analysis Flow
+Query: "Predict diabetes risk using 6-month patient data"
+Agent Interaction Flow:
+Query Agent [Llama 2 70B]
+└── Determines:
+- Task: Risk prediction
+- Timeframe: 6 months
+- Condition: Diabetes
+- Data scope: Patient history
+Entity Agent [BioClinicalBERT]
+└── Identifies required markers:
+- HbA1c (LOINC: 4548-4)
+- Fasting Glucose (LOINC: 1558-6)
+- BMI calculations
+- Blood pressure readings
+- Family history markers
+Domain Agent [PubMedBERT]
+└── Applies:
+- ADA Guidelines
+- Risk factor weights
+- Clinical thresholds
+ML Agent
+└── Executes:
+- Feature engineering
+- Risk model application
+- Confidence scoring
 
+## Technical Stack
 
-#### Key Components
-- Historical data processing
-- Clinical feature engineering
-- ML model application
-- Continuous learning
+### Models & Tools
+- **Language Models**
+  - Llama 2 70B: General query understanding
+  - ClinicalBERT: Medical entity recognition
+  - BioClinicalBERT: Relationship extraction
+  - PubMedBERT: Medical knowledge
+  - Med-analytics-bert: Clinical metrics
 
-## Critical Assumptions
+- **Clinical Tools**
+  - UMLS API for terminology
+  - SNOMED CT browser
+  - LOINC mapper
+  - ICD-10 classifier
 
-### Clinical Domain Assumptions
-1. **Data Standards**
-   - HL7 v2/v3 compatibility
-   - FHIR resource mapping
-   - SNOMED-CT coding
-   - ICD-10/ICD-11 classifications
-   - LOINC lab codes
+- **Infrastructure**
+  - LangGraph for orchestration
+  - ChromaDB for vector storage
+  - TimescaleDB for temporal data
+  - Redis for caching
 
-2. **Clinical Workflow**
-   - EMR/EHR integration capability
-   - Clinical decision support requirements
-   - Real-time alerting needs
-   - Workflow interruption tolerance
+## Key Assumptions
 
-3. **Medical Knowledge**
-   - Updated medical ontologies
-   - Current clinical guidelines
-   - Evidence-based rules
-   - Drug interaction data
+1. **Data Quality**
+   - Clean, structured clinical data
+   - Standard medical coding
+   - Complete patient records
+   - Regular updates
 
-### Technical Assumptions
+2. **Technical Requirements**
+   - Response time: <500ms
+   - Uptime: 99.9%
+   - Data volume: 10M+ records
+   - Concurrent users: 100+
 
-1. **Performance Requirements**
-   - Query response: <500ms for rules
-   - Batch processing: <4 hours
-   - Uptime: 99.99%
-   - Concurrent users: 1000+
+3. **Clinical Standards**
+   - Current medical guidelines
+   - Regular protocol updates
+   - Available clinical validation
+   - Standard workflows
 
-2. **Data Characteristics**
-   - Patient records: 10M+
-   - Daily transactions: 1M+
-   - Storage: 100TB+
-   - Text data: 60% of volume
-   - Structured data: 40% of volume
+## Implementation Notes
 
-3. **Integration Requirements**
-   - HL7 interface capability
-   - FHIR API support
-   - DICOM compatibility
-   - Secure messaging protocols
+1. **Query Processing**
+   - Medical entity extraction
+   - Clinical context validation
+   - Protocol adherence
+   - Risk assessment
 
-### LLM & ML Assumptions
+2. **Data Handling**
+   - PHI protection
+   - Audit logging
+   - Version control
+   - Quality checks
 
-1. **Model Performance**
-   - ClinicalBERT: F1 >0.85 for medical entities
-   - BioBERT: Precision >0.90 for bio entities
-   - PubMedBERT: Recall >0.85 for literature
-   - Overall accuracy: >95% for critical decisions
+3. **Model Updates**
+   - Weekly model retraining
+   - Continuous validation
+   - Performance monitoring
+   - Clinical accuracy checks
 
-2. **Resource Requirements**
-   - GPU: A100 or equivalent
-   - Memory: 32GB+ per instance
-   - Storage: NVMe SSD
-   - Network: 10Gbps+
+## Limitations
+1. Structured data requirement
+2. Clinical validation needed
+3. Regular updates required
+4. Domain expertise necessary
 
-## Technology Stack
+## Performance Metrics
+- Entity resolution accuracy: >95%
+- Query response time: <500ms
+- Clinical validation rate: >98%
+- Prediction accuracy: >90%
 
-### Core Infrastructure
-- LangGraph: Orchestration
-- Pinecone: Medical vector store
-- MongoDB Atlas: Document store
-- Redis Enterprise: Caching
-- Apache Kafka: Event streaming
+---
 
-### ML Infrastructure
-- Weights & Biases: ML monitoring
-- MLflow: Model registry
-- Ray: Distributed computing
-- NVIDIA Triton: Model serving
-
-### Development & Deployment
-- FastAPI: Backend services
-- Next.js 14: Frontend
-- Docker & Kubernetes: Containerization
-- ArgoCD: GitOps deployment
-
-## Security & Compliance
-
-### Security Requirements
-- HIPAA compliance
-- HITECH compliance
-- GDPR readiness
-- SOC2 Type II
-- Zero-trust architecture
-
-### Data Protection
-- End-to-end encryption
-- PHI data masking
-- Role-based access
-- Audit logging
-
-## Setup & Development
-
-### Prerequisites
-```bash
-# Core dependencies
-python -m pip install torch transformers clinical-bert bio-bert
-pip install langchain langgraph langsmith
-
-# Vector stores & databases
-pip install pinecone-client pymongo redis
-
-# Monitoring
-pip install wandb mlflow prometheus-client
-
-## Model configuration
-
-export CLINICAL_BERT_MODEL="emilyalsentzer/Bio_ClinicalBERT"
-export BIOBERT_MODEL="dmis-lab/biobert-base-cased-v1.2"
-export PUBMEDBERT_MODEL="microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract"
+Note: System requires clinical validation before production use. All models require regular updates based on new medical guidelines and research.
