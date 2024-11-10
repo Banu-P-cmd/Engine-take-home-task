@@ -21,7 +21,7 @@ flowchart TB
         DS[(Clinical Sources)]
     end
 
-    subgraph Orchestration["LangGraph Orchestration Layer"]
+    subgraph Orchestration["LangGraph Orchestrator"]
         direction TB
         LG[LangGraph Controller]
         subgraph Agents["Agent Network"]
