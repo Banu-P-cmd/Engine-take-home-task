@@ -25,7 +25,7 @@ flowchart TB
         direction TB
         LG[LangGraph Controller]
         subgraph Agents["Agent Network"]
-            QA[Query Agent w/Claude 3]
+            QA[Query Agent]
             DA[Data Agent]
             RA[Rules Agent]
             MA[ML Agent]
