@@ -175,10 +175,10 @@ ML Agent
 4. Domain expertise necessary
 
 ## Performance Metrics
-- Entity resolution accuracy: >95%
+- Entity resolution accuracy: >75%
 - Query response time: <500ms
-- Clinical validation rate: >98%
-- Prediction accuracy: >90%
+- Clinical validation rate: >70%
+- Prediction accuracy: >65%
 
 ---
 
