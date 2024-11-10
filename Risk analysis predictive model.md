@@ -4,73 +4,60 @@
 ```mermaid
 
 sequenceDiagram
-    participant U as User
-    participant O as Orchestrator
-    participant S as Schema Manager
-    participant D as Data Agent
-    participant F as Feature Agent
+    participant C as Clinician
+    participant O as Orchestrator Agent
+    participant Q as Query Agent
+    participant S as Schema Agent
+    participant E as Entity Agent
+    participant D as Domain Agent
+    participant R as Data Retrieval Agent
     participant M as ML Agent
-    participant K as Knowledge Graph
-    participant P as Performance Monitor
+    participant A as Analytics Agent
 
-    U->>O: Prediction Request
+    C->>O: "Predict risk of diabetes for patients based on last 6 months data"
     
-    par Initial Processing
-        O->>S: Get Schema Context
-        S->>K: Fetch Schema Rules
-        K-->>S: Schema Validations
-        
-        O->>D: Historical Data Request
-        D->>K: Get Data Rules
-        K-->>D: Data Requirements
+    O->>Q: Process prediction query
+    activate Q
+    Note over Q: Identifies:<br/>1. Task: Risk prediction<br/>2. Timeframe: 6 months<br/>3. Condition: Diabetes<br/>4. Scope: All patients
+    Q-->>O: Prediction requirements
+    deactivate Q
+
+    par Data Preparation
+        O->>S: Get temporal schema
+        activate S
+        Note over S: Maps required data:<br/>1. Demographics<br/>2. Lab results<br/>3. Vital signs<br/>4. Medications<br/>5. Family history
+        S-->>O: Data schema
+        deactivate S
+
+        O->>E: Resolve clinical markers
+        activate E
+        Note over E: Maps indicators:<br/>1. HbA1c<br/>2. Fasting glucose<br/>3. BMI<br/>4. Blood pressure<br/>5. Family history
+        E-->>O: Clinical markers
+        deactivate E
+
+        O->>D: Get risk factors
+        activate D
+        Note over D: Defines:<br/>1. Risk thresholds<br/>2. Clinical criteria<br/>3. Intervention points<br/>4. Risk categories
+        D-->>O: Risk criteria
+        deactivate D
     end
 
-    S-->>O: Validated Schema
-    D-->>O: Historical Data
+    O->>R: Retrieve historical data
+    activate R
+    Note over R: Collects:<br/>1. Time-series data<br/>2. Patient history<br/>3. Related conditions<br/>4. Treatment history
+    R-->>O: Patient datasets
+    deactivate R
 
-    O->>F: Feature Engineering Request
-    
-    par Feature Processing
-        F->>K: Get Feature Rules
-        K-->>F: Feature Definitions
-        
-        F->>S: Get Data Types
-        S-->>F: Type Mappings
-    end
+    O->>M: Execute prediction
+    activate M
+    Note over M: ML Pipeline:<br/>1. Feature engineering<br/>2. Model selection<br/>3. Risk calculation<br/>4. Confidence scoring
+    M-->>O: Risk predictions
+    deactivate M
 
-    F-->>O: Feature Vectors
+    O->>A: Generate insights
+    activate A
+    Note over A: Analysis:<br/>1. Risk stratification<br/>2. Key factors<br/>3. Trend analysis<br/>4. Recommendations
+    A-->>O: Clinical insights
+    deactivate A
 
-    O->>M: ML Processing Request
-    
-    par ML Pipeline
-        M->>K: Get Model Rules
-        K-->>M: Model Parameters
-        
-        M->>P: Get Performance Metrics
-        P-->>M: Model Health
-    end
-
-    M-->>O: Predictions
-
-    O->>P: Log Predictions
-    
-    par Performance Analysis
-        P->>K: Get KPI Rules
-        K-->>P: Performance Thresholds
-    end
-
-    P-->>O: Quality Metrics
-    
-    O-->>U: Enhanced Prediction Report
-
-    loop Model Optimization
-        P->>K: Update Knowledge Base
-        P->>M: Update Model Rules
-        P->>F: Update Feature Rules
-        
-        par Continuous Learning
-            K->>M: Model Improvements
-            K->>F: Feature Enhancements
-            K->>S: Schema Updates
-        end
-    end
+    O-->>C: Comprehensive risk report with recommendations
