@@ -144,4 +144,21 @@ An enterprise-grade clinical data agent system leveraging specialized medical LL
 - Role-based access
 - Audit logging
 
-## Repository Structure
+## Setup & Development
+
+### Prerequisites
+```bash
+# Core dependencies
+python -m pip install torch transformers clinical-bert bio-bert
+pip install langchain langgraph langsmith
+
+# Vector stores & databases
+pip install pinecone-client pymongo redis
+
+# Monitoring
+pip install wandb mlflow prometheus-client
+
+# Model configuration
+export CLINICAL_BERT_MODEL="emilyalsentzer/Bio_ClinicalBERT"
+export BIOBERT_MODEL="dmis-lab/biobert-base-cased-v1.2"
+export PUBMEDBERT_MODEL="microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract"
