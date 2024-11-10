@@ -6,113 +6,78 @@
   'theme': 'dark',
   'themeVariables': {
     'fontFamily': 'arial',
-    'primaryColor': '#2C3E50',
-    'primaryTextColor': '#E8F0F8',
-    'primaryBorderColor': '#445E7C',
-    'lineColor': '#445E7C'
+    'nodeTextColor': '#FFFFFF',
+    'mainBkg': '#1F2937',
+    'textColor': '#FFFFFF',
+    'lineColor': '#FFFFFF',
+    'clusterBkg': '#374151',
+    'titleColor': '#FFFFFF'
   }
 }}%%
 flowchart TB
-    subgraph External["External Integration Layer"]
-        UI[Web UI - Next.js 14]
-        API[FastAPI/LangServe]
-        DS[(Data Sources)]
+    subgraph Input["Input System"]
+        UI[Clinical Interface]
+        API[API Gateway]
     end
 
-    subgraph SchemaLayer["Schema Management Layer"]
+    subgraph AgentNetwork["LangGraph Agent Network"]
         direction TB
-        subgraph TableManager["Table Management"]
-            TM[Table Mapper]
-            RM[Relationship Manager]
-            CM[Column Manager]
-            DT[Data Type Handler]
+        OA[Orchestrator Agent]
+        
+        subgraph UnderstandingAgents["Understanding Layer"]
+            QA[Query Understanding Agent]
+            SA[Schema Understanding Agent<br>Clinical DB Schema]
+            EA[Entity Resolution Agent<br>Medical Terms & Codes]
+            DA[Domain Knowledge Agent<br>Clinical Guidelines]
+        end
+
+        subgraph ExecutionAgents["Execution Layer"]
+            PA[Planning Agent<br>Query Strategy]
+            DRA[Data Retrieval Agent<br>Clinical Data Access]
+            VA[Validation Agent<br>Clinical Rules]
+        end
+
+        subgraph AnalysisAgents["Analysis Layer"]
+            AA[Analytics Agent<br>Clinical Metrics]
+            MA[ML Agent<br>Risk Models]
+            RA[Reporting Agent<br>Clinical Summaries]
+        end
+    end
+
+    subgraph Tools["Agent Tools & Resources"]
+        direction TB
+        subgraph DataStores["Data Stores"]
+            CDB[(Clinical DB)]
+            VDB[(Vector Store)]
+            KG[(Medical Knowledge Graph)]
         end
         
-        subgraph EntityManager["Entity Management"]
-            ER[Entity Registry]
-            AM[Alias Manager]
-            SM[Standardization Manager]
-            VM[Validation Manager]
+        subgraph Resources["Clinical Resources"]
+            SNOMED[SNOMED CT]
+            ICD[ICD-10 Codes]
+            LOINC[LOINC Lab Codes]
         end
-
-        subgraph DomainManager["Domain Knowledge"]
-            DK[Domain Rules]
-            BL[Business Logic]
-            KM[KPI Manager]
-            TH[Term Handler]
-        end
-    end
-
-    subgraph Orchestration["Processing Orchestration"]
-        direction TB
-        OE[Orchestration Engine]
         
-        subgraph DataProcessing["Data Processing"]
-            DP[Data Processor]
-            QV[Quality Validator]
-            TR[Type Resolver]
-            JE[Join Engine]
-        end
-
-        subgraph QueryProcessing["Query Processing"]
-            QP[Query Parser]
-            QA[Query Analyzer]
-            QO[Query Optimizer]
-            QE[Query Executor]
+        subgraph Models["ML Models"]
+            ClinicalBERT[ClinicalBERT]
+            RiskModels[Risk Models]
         end
     end
 
-    subgraph Storage["Storage Layer"]
-        direction LR
-        RD[(Relational DB)]
-        VD[(Vector Store)]
-        CD[(Cache Layer)]
-        KG[(Knowledge Graph)]
+    subgraph Learning["Learning System"]
+        MA[Memory Agent<br>Case History]
+        LA[Learning Agent<br>Pattern Recognition]
+        FA[Feedback Agent<br>Clinical Validation]
     end
 
-    subgraph Analytics["Analytics Layer"]
-        direction TB
-        subgraph Basic["Basic Analytics"]
-            SA[Statistical Analysis]
-            AG[Aggregation Engine]
-            FT[Filter Engine]
-        end
+    Input --> OA
+    OA --> UnderstandingAgents
+    UnderstandingAgents --> ExecutionAgents
+    ExecutionAgents --> AnalysisAgents
+    UnderstandingAgents -.-> Tools
+    ExecutionAgents -.-> Tools
+    AnalysisAgents -.-> Tools
+    AnalysisAgents --> Learning
+    Learning --> OA
 
-        subgraph Advanced["Advanced Analytics"]
-            ML[ML Pipeline]
-            PP[Pattern Processor]
-            PA[Predictive Analytics]
-        end
-    end
-
-    subgraph Monitor["Monitoring Layer"]
-        direction TB
-        PM[Performance Monitor]
-        QM[Quality Monitor]
-        UM[Usage Monitor]
-        AM[Analytics Monitor]
-    end
-
-    External --> SchemaLayer
-    SchemaLayer --> Orchestration
-    Orchestration --> Storage
-    Storage --> Analytics
-    Analytics --> Monitor
-    Monitor --> Orchestration
-
-    classDef external fill:#3498DB,stroke:#2980B9,color:#E8F0F8
-    classDef schema fill:#2ECC71,stroke:#27AE60,color:#E8F0F8
-    classDef orch fill:#E74C3C,stroke:#C0392B,color:#E8F0F8
-    classDef storage fill:#9B59B6,stroke:#8E44AD,color:#E8F0F8
-    classDef analytics fill:#F1C40F,stroke:#F39C12,color:#2C3E50
-    classDef monitor fill:#1ABC9C,stroke:#16A085,color:#E8F0F8
-
-    class External external
-    class SchemaLayer,TableManager,EntityManager,DomainManager schema
-    class Orchestration,DataProcessing,QueryProcessing orch
-    class Storage storage
-    class Analytics,Basic,Advanced analytics
-    class Monitor monitor
-        
-       
-    
+   
