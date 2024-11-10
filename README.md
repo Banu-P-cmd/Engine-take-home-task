@@ -12,18 +12,18 @@ An enterprise-grade clinical data agent system leveraging specialized medical LL
 - **RadBERT**: Radiology report processing
 - **Med-PaLM 2**: Medical reasoning tasks
 - **BlueBERT**: Medical concept extraction
-- **Claude 3**: General orchestration and complex reasoning
+- **Open AI GPT**: General orchestration and complex reasoning
 
 ### Model Selection Strategy
 - ClinicalBERT for patient records analysis
 - BioBERT for biological entity mapping
 - PubMedBERT for clinical knowledge integration
-- General LLMs (Claude 3) for orchestration
+- General LLMs (GPT) for orchestration
 
 ## Architecture Components
 
 ### 1. Overall System Architecture
-![System Architecture](./src/assets/architecture.png)
+
 
 #### Layer Description
 - External Integration Layer
@@ -34,7 +34,7 @@ An enterprise-grade clinical data agent system leveraging specialized medical LL
 - Monitoring Layer
 
 ### 2. Rules-Based Query Flow
-![Rules Flow](./src/assets/rules-sequence.png)
+
 
 #### Key Components
 - Schema validation
@@ -43,7 +43,7 @@ An enterprise-grade clinical data agent system leveraging specialized medical LL
 - Domain knowledge integration
 
 ### 3. Predictive Analysis Flow
-![Predictive Flow](./src/assets/predictive-sequence.png)
+
 
 #### Key Components
 - Historical data processing
