@@ -158,7 +158,8 @@ pip install pinecone-client pymongo redis
 # Monitoring
 pip install wandb mlflow prometheus-client
 
-# Model configuration
+## Model configuration
+
 export CLINICAL_BERT_MODEL="emilyalsentzer/Bio_ClinicalBERT"
 export BIOBERT_MODEL="dmis-lab/biobert-base-cased-v1.2"
 export PUBMEDBERT_MODEL="microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract"
