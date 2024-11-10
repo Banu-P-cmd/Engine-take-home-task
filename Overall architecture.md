@@ -5,23 +5,23 @@
 %%{init: {
   'theme': 'dark',
   'themeVariables': {
-    'fontFamily': 'monaco',
-    'primaryColor': '#BB86FC',
-    'primaryTextColor': '#fff',
-    'primaryBorderColor': '#BB86FC',
-    'lineColor': '#BB86FC',
-    'secondaryColor': '#03DAC6',
-    'tertiaryColor': '#CF6679'
+    'fontFamily': 'arial',
+    'primaryColor': '#2C3E50',
+    'primaryTextColor': '#E8F0F8',
+    'primaryBorderColor': '#445E7C',
+    'lineColor': '#445E7C',
+    'secondaryColor': '#34495E',
+    'tertiaryColor': '#1C2833'
   }
 }}%%
 flowchart TB
-    subgraph External["External Layer"]
+    subgraph External["External Integration Layer"]
         UI[Web UI - Next.js 14]
         API[FastAPI/LangServe]
         DS[(Clinical Sources)]
     end
 
-    subgraph Orchestration["LangGraph Orchestration"]
+    subgraph Orchestration["LangGraph Orchestration Layer"]
         direction TB
         LG[LangGraph Controller]
         subgraph Agents["Agent Network"]
@@ -33,7 +33,7 @@ flowchart TB
         end
     end
 
-    subgraph Core["Core Processing"]
+    subgraph Core["Core Processing Layer"]
         direction TB
         subgraph Rules["Rules Engine"]
             RP[RAG Pipeline]
@@ -48,7 +48,7 @@ flowchart TB
         end
     end
 
-    subgraph Infrastructure["Modern Stack"]
+    subgraph Infrastructure["Infrastructure Layer"]
         direction LR
         K[Kafka/Redpanda]
         R[(Redis Enterprise)]
@@ -56,7 +56,7 @@ flowchart TB
         P[(PGVector)]
     end
 
-    subgraph Storage["Storage Layer"]
+    subgraph Storage["Persistence Layer"]
         direction LR
         DW[(MongoDB Atlas)]
         FS[(Milvus)]
@@ -64,7 +64,7 @@ flowchart TB
         FB[(LangKit Store)]
     end
 
-    subgraph Monitor["Observability"]
+    subgraph Monitor["Observability Layer"]
         direction TB
         MM[LangSmith]
         DM[Weights & Biases]
@@ -78,12 +78,12 @@ flowchart TB
     Storage --> Monitor
     Monitor --> Orchestration
 
-    classDef external fill:#BB86FC,stroke:#BB86FC,color:#000000
-    classDef orch fill:#03DAC6,stroke:#03DAC6,color:#000000
-    classDef core fill:#CF6679,stroke:#CF6679,color:#000000
-    classDef infra fill:#FFB86C,stroke:#FFB86C,color:#000000
-    classDef storage fill:#50FA7B,stroke:#50FA7B,color:#000000
-    classDef monitor fill:#8BE9FD,stroke:#8BE9FD,color:#000000
+    classDef external fill:#3498DB,stroke:#2980B9,color:#E8F0F8
+    classDef orch fill:#2ECC71,stroke:#27AE60,color:#E8F0F8
+    classDef core fill:#E74C3C,stroke:#C0392B,color:#E8F0F8
+    classDef infra fill:#9B59B6,stroke:#8E44AD,color:#E8F0F8
+    classDef storage fill:#F1C40F,stroke:#F39C12,color:#2C3E50
+    classDef monitor fill:#1ABC9C,stroke:#16A085,color:#E8F0F8
 
     class UI,API,DS external
     class LG,QA,DA,RA,MA,MON orch
@@ -92,4 +92,12 @@ flowchart TB
     class DW,FS,MS,FB storage
     class MM,DM,PM monitor
 
-   
+    %% Add professional styling
+    style External fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+    style Orchestration fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+    style Core fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+    style Infrastructure fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+    style Storage fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+    style Monitor fill:#2C3E50,stroke:#445E7C,color:#E8F0F8
+            
+    
