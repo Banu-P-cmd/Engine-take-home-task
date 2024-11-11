@@ -7,7 +7,7 @@ A specialized agent-based system for clinical data analysis and risk prediction,
 
 ### Core Agents & Models
 1. **Query Understanding Agent**
-  - Primary: Llama 2 70B for general query comprehension
+  - Primary: [Llama 2 70B](https://huggingface.co/docs/transformers/en/model_doc/llama2) for general query comprehension
   - Supporting: ClinicalBERT (bio_clinical_bert) for medical term identification
   - Task: Converts natural language queries to structured clinical requests
 
